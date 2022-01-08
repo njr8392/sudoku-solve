@@ -9,41 +9,67 @@ import (
 //standard board size
 type grid [9][9]byte
 
-//let's use the brute force first aka backtracking
+
+
+//let's use DFS first aka backtracking
 func main() {
+	var grids grid = grid{
+		{3, 0, 6, 5, 0, 8, 4, 0, 0},
+		{5, 2, 0, 0, 0, 0, 0, 0, 0},
+		{0, 8, 7, 0, 0, 0, 0, 3, 1},
+		{0, 0, 3, 0, 1, 0, 0, 8, 0},
+		{9, 0, 0, 8, 6, 3, 0, 0, 5},
+		{0, 5, 0, 0, 9, 0, 6, 0, 0},
+		{1, 3, 0, 0, 0, 0, 2, 5, 0},
+		{0, 0, 0, 0, 0, 0, 0, 7, 4},
+		{0, 0, 5, 2, 0, 6, 3, 0, 0},
+	}
+
+	fmt.Println(solver(grids))
 }
 
-func solve(g grid) bool {
-	var row, col int
-	var valid bool
+func solver(g grid)grid{
+	var solve func(grid)bool
+	var buf grid
 
-	for i := range board {
-		for j := range board[i] {
-			if g[i][j] == 0 {
-				valid = false
+	solve = func(g grid)bool{
+	var row, col int
+	var valid bool = true
+
+	for i := range g {
+		for j := range g[i] {
+			if g[i][j] == byte(0) {
 				row, col = i, j
+				valid = false
+			}
+
+			if !valid {
 				break
-			} else {
-				return true
 			}
 		}
 	}
+	if valid {
+		buf = CopyGrid(g)
+		return true
+	}
 
 	for n := 1; n < 10; n++ {
-		if isSafe(g, row, col, n) {
+		if isSafe(g, row, col, byte(n)) {
+			g[row][col] = byte(n)
 			if solve(g) {
-				fmt.Println("Solved!!!")
-				fmt.Println(g)
 				return true
 			} else { //otherwise backtrack
-				g[row][col] = 0
+				g[row][col] = byte(0)
 			}
 		}
 	}
 	return false
+	}
+	solve(g)
+	return buf
 }
 
-func isSafe(g [9][9]byte, row, col, num int) bool {
+func isSafe(g [9][9]byte, row, col int, num byte) bool {
 	//check if the row is valid
 	for i := 0; i < len(g); i++ {
 		if g[row][i] == num {
@@ -72,4 +98,14 @@ func isSafe(g [9][9]byte, row, col, num int) bool {
 
 }
 
+
+func CopyGrid(src grid)grid{
+	var buf grid
+	for i := range src{
+		for j := range src{
+			buf[i][j] = src[i][j]
+		}
+	}
+	return buf
+}
 // let's make it faster. constraint satisfaction?
