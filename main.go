@@ -9,7 +9,6 @@ import (
 //standard board size
 type grid [9][9]byte
 
-
 //let's use DFS first aka backtracking
 func main() {
 	var g grid = grid{
@@ -25,51 +24,51 @@ func main() {
 	}
 
 	sol := solver(g)
-	if !Equal(sol, g){
-		fmt.Printf("Solved!\n%v\n",sol)
+	if !Equal(sol, g) {
+		fmt.Printf("Solved!\n%v\n", sol)
 		return
 	}
 	fmt.Println("No solution exists")
 }
 
-func solver(g grid)grid{
-	var solve func(grid)bool
+func solver(g grid) grid {
+	var solve func(grid) bool
 	var buf grid
 
-	solve = func(g grid)bool{
-	var row, col int
-	//we'll use a bool to only return one solution, there may be many for a given grid!
-	var valid bool = true 
+	solve = func(g grid) bool {
+		var row, col int
+		//we'll use a bool to only return one solution, there may be many for a given grid!
+		var valid bool = true
 
-	//get index of blank value
-	for i := range g {
-		for j := range g[i] {
-			if g[i][j] == byte(0) {
-				row, col = i, j
-				valid = false
-			}
+		//get index of blank value
+		for i := range g {
+			for j := range g[i] {
+				if g[i][j] == byte(0) {
+					row, col = i, j
+					valid = false
+				}
 
-			if !valid {
-				break
-			}
-		}
-	}
-	if valid {
-		buf = CopyGrid(g)
-		return true
-	}
-
-	for n := 1; n < 10; n++ {
-		if isSafe(g, row, col, byte(n)) {
-			g[row][col] = byte(n)
-			if solve(g) {
-				return true
-			} else { //otherwise backtrack
-				g[row][col] = byte(0)
+				if !valid {
+					break
+				}
 			}
 		}
-	}
-	return false
+		if valid {
+			buf = CopyGrid(g)
+			return true
+		}
+
+		for n := 1; n < 10; n++ {
+			if isSafe(g, row, col, byte(n)) {
+				g[row][col] = byte(n)
+				if solve(g) {
+					return true
+				} else { //otherwise backtrack
+					g[row][col] = byte(0)
+				}
+			}
+		}
+		return false
 	}
 	solve(g)
 	return buf
@@ -104,26 +103,25 @@ func isSafe(g [9][9]byte, row, col int, num byte) bool {
 
 }
 
-
-func CopyGrid(src grid)grid{
+func CopyGrid(src grid) grid {
 	var buf grid
-	for i := range src{
-		for j := range src{
+	for i := range src {
+		for j := range src {
 			buf[i][j] = src[i][j]
 		}
 	}
 	return buf
 }
 
-
-func Equal(a,b grid)bool{
-	for i := range a{
-		for j := range a[i]{
-			if a[i][j] != b[i][j]{
+func Equal(a, b grid) bool {
+	for i := range a {
+		for j := range a[i] {
+			if a[i][j] != b[i][j] {
 				return false
 			}
 		}
 	}
 	return true
 }
+
 // Can we make it faster?
