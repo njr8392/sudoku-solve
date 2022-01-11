@@ -3,8 +3,7 @@ package main
 import (
 	"testing"
 )
-
-	var grids grid = grid{
+	var g grid = grid{
 		{3, 0, 6, 5, 0, 8, 4, 0, 0},
 		{5, 2, 0, 0, 0, 0, 0, 0, 0},
 		{0, 8, 7, 0, 0, 0, 0, 3, 1},
@@ -16,8 +15,9 @@ import (
 		{0, 0, 5, 2, 0, 6, 3, 0, 0},
 	}
 
+//just over 1s on my 2012 mac running linux, amd64
 func BenchmarkSolver(b *testing.B){
 	for i :=0; i < b.N; i++{
-		solver(grids)
+		solver(g)
 	}
 }

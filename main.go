@@ -10,10 +10,9 @@ import (
 type grid [9][9]byte
 
 
-
 //let's use DFS first aka backtracking
 func main() {
-	var grids grid = grid{
+	var g grid = grid{
 		{3, 0, 6, 5, 0, 8, 4, 0, 0},
 		{5, 2, 0, 0, 0, 0, 0, 0, 0},
 		{0, 8, 7, 0, 0, 0, 0, 3, 1},
@@ -25,7 +24,12 @@ func main() {
 		{0, 0, 5, 2, 0, 6, 3, 0, 0},
 	}
 
-	fmt.Println(solver(grids))
+	sol := solver(g)
+	if !Equal(sol, g){
+		fmt.Printf("Solved!\n%v\n",sol)
+		return
+	}
+	fmt.Println("No solution exists")
 }
 
 func solver(g grid)grid{
@@ -34,8 +38,10 @@ func solver(g grid)grid{
 
 	solve = func(g grid)bool{
 	var row, col int
-	var valid bool = true
+	//we'll use a bool to only return one solution, there may be many for a given grid!
+	var valid bool = true 
 
+	//get index of blank value
 	for i := range g {
 		for j := range g[i] {
 			if g[i][j] == byte(0) {
@@ -108,4 +114,16 @@ func CopyGrid(src grid)grid{
 	}
 	return buf
 }
-// let's make it faster. constraint satisfaction?
+
+
+func Equal(a,b grid)bool{
+	for i := range a{
+		for j := range a[i]{
+			if a[i][j] != b[i][j]{
+				return false
+			}
+		}
+	}
+	return true
+}
+// Can we make it faster?
